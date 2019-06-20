@@ -1,4 +1,6 @@
-package com.graisvictory.imgur.data;
+package com.graisvictory.imgur.data.backend;
+
+import com.graisvictory.imgur.data.Configuration;
 
 import org.jetbrains.annotations.NotNull;
 

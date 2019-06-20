@@ -46,6 +46,10 @@ public class ImageListViewModel extends BaseViewModel {
         requestNextItems();
     }
 
+    public int getCurrentPage() {
+        return page;
+    }
+
     public void requestNextItems() {
         if (canLoadPosts()) {
             ++page;

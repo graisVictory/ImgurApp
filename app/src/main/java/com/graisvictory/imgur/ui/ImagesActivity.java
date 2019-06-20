@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.graisvictory.imgur.R;
@@ -26,6 +27,8 @@ public class ImagesActivity extends BaseActivity<ImageListViewModel> {
     RecyclerView imagesList;
     @BindView(R.id.progress)
     SpinKitView progress;
+    @BindView(R.id.swipeRefresh)
+    SwipeRefreshLayout swipeRefresh;
 
     private ImagesAdapter adapter;
 
@@ -44,7 +47,15 @@ public class ImagesActivity extends BaseActivity<ImageListViewModel> {
         adapter = new ImagesAdapter();
         adapter.setItems(viewModel.getLatestItems());
 
+        setupSwipeRefresh();
         setupRecyclerView();
+    }
+
+    private void setupSwipeRefresh() {
+        swipeRefresh.setOnRefreshListener(() -> {
+            viewModel.refresh();
+            adapter.clear();
+        });
     }
 
     private void setupRecyclerView() {
@@ -84,7 +95,12 @@ public class ImagesActivity extends BaseActivity<ImageListViewModel> {
         if (dataState.isSuccess()) {
             adapter.addItems(dataState.getData());
         }
-        int progressVisibility = dataState.isLoading() ? View.VISIBLE : View.GONE;
+        boolean showRefresh = dataState.isLoading() && viewModel.getCurrentPage() == 0;
+        boolean showBottomLoader = dataState.isLoading() && viewModel.getCurrentPage() > 0;
+
+        swipeRefresh.setRefreshing(showRefresh);
+
+        int progressVisibility = showBottomLoader ? View.VISIBLE : View.GONE;
         progress.setVisibility(progressVisibility);
     }
 

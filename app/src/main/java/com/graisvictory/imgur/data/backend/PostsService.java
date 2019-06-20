@@ -1,4 +1,4 @@
-package com.graisvictory.imgur.data;
+package com.graisvictory.imgur.data.backend;
 
 import com.graisvictory.imgur.domain.ApiResponse;
 import com.graisvictory.imgur.domain.post.ImgurPost;

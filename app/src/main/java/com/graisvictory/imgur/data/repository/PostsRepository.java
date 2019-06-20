@@ -2,7 +2,7 @@ package com.graisvictory.imgur.data.repository;
 
 import androidx.core.util.Consumer;
 
-import com.graisvictory.imgur.data.PostsService;
+import com.graisvictory.imgur.data.backend.PostsService;
 import com.graisvictory.imgur.domain.post.ImgurPost;
 
 import java.util.List;

@@ -10,7 +10,7 @@ import com.graisvictory.imgur.data.exception.NoInternetException;
 
 public class BaseViewModel extends ViewModel {
 
-    private MutableLiveData<LocalizedError> error = new MutableLiveData<>();
+    private SingleLiveData<LocalizedError> error = new SingleLiveData<>();
 
     public LiveData<LocalizedError> getErrorLiveData() {
         return error;

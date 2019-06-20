@@ -24,7 +24,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageHolde
     private List<Image> data;
 
     public void clear() {
-        setItems(new ArrayList<>());
+        setItems(null);
     }
 
     public void setItems(List<Image> items) {

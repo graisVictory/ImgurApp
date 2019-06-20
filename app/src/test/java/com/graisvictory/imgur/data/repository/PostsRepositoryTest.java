@@ -2,7 +2,7 @@ package com.graisvictory.imgur.data.repository;
 
 import androidx.core.util.Consumer;
 
-import com.graisvictory.imgur.data.PostsService;
+import com.graisvictory.imgur.data.backend.PostsService;
 import com.graisvictory.imgur.data.exception.BackendException;
 import com.graisvictory.imgur.data.exception.NoInternetException;
 import com.graisvictory.imgur.di.DaggerRepositoryComponent;

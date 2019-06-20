@@ -1,6 +1,6 @@
 package com.graisvictory.imgur.di;
 
-import com.graisvictory.imgur.data.PostsService;
+import com.graisvictory.imgur.data.backend.PostsService;
 
 import org.mockito.Mockito;
 
