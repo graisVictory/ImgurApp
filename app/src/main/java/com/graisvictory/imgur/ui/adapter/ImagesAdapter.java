@@ -11,47 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.graisvictory.imgur.R;
+import com.graisvictory.imgur.ui.common.BaseAdapter;
 import com.graisvictory.imgur.viewmodel.images.Image;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageHolder> {
-
-    private List<Image> data;
-
-    public void clear() {
-        setItems(null);
-    }
-
-    public void setItems(List<Image> items) {
-        int previousSize = data != null ? data.size() : 0;
-        data = items != null ? new ArrayList<>(items) : null;
-
-        if (previousSize != 0) {
-            notifyItemRangeRemoved(0, previousSize);
-        }
-
-        int newSize = data != null ? data.size() : 0;
-        if (newSize != 0) {
-            notifyItemRangeInserted(0, newSize);
-        }
-    }
-
-    public void addItems(List<Image> items) {
-        if (data == null) {
-            data = new ArrayList<>();
-        }
-
-        data.addAll(items);
-
-        int lastPosition = data.size() - 1;
-        int addedItemsSize = items.size();
-        notifyItemRangeInserted(lastPosition, lastPosition + addedItemsSize);
-    }
+public class ImagesAdapter extends BaseAdapter<Image, ImagesAdapter.ImageHolder> {
 
     @NonNull
     @Override
@@ -63,13 +29,21 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageHolde
 
     @Override
     public void onBindViewHolder(@NonNull ImageHolder holder, int position) {
-        Image postImage = data.get(position);
+        Image postImage = getItem(position);
         holder.bind(postImage);
     }
 
     @Override
-    public int getItemCount() {
-        return data != null ? data.size() : 0;
+    protected boolean checkSameItems(Image oldItem, Image newItem) {
+        return oldItem.getId().equals(newItem.getId());
+    }
+
+    @Override
+    protected boolean checkSameContent(Image oldItem, Image newItem) {
+        return oldItem.getId().equals(newItem.getId())
+                && oldItem.getAuthor().equals(newItem.getAuthor())
+                && oldItem.getLink().equals(newItem.getLink())
+                && oldItem.getTitle().equals(newItem.getTitle());
     }
 
     class ImageHolder extends RecyclerView.ViewHolder {
