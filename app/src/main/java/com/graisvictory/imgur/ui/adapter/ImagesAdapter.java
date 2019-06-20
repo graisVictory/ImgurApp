@@ -23,6 +23,10 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageHolde
 
     private List<Image> data;
 
+    public void clear() {
+        setItems(new ArrayList<>());
+    }
+
     public void setItems(List<Image> items) {
         int previousSize = data != null ? data.size() : 0;
         data = items != null ? new ArrayList<>(items) : null;
@@ -85,6 +89,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageHolde
         public void bind(Image postImage) {
             title.setText(postImage.getTitle());
             author.setText(postImage.getAuthor());
+
             Glide.with(itemView)
                     .load(postImage.getLink())
                     .placeholder(R.drawable.ic_loading)

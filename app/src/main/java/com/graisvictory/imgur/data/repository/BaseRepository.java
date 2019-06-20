@@ -3,10 +3,12 @@ package com.graisvictory.imgur.data.repository;
 import androidx.core.util.Consumer;
 
 import com.graisvictory.imgur.data.exception.BackendException;
+import com.graisvictory.imgur.data.exception.NoInternetException;
 import com.graisvictory.imgur.domain.ApiResponse;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,8 +66,16 @@ abstract class BaseRepository {
         }
 
         @Override
-        public void onFailure(@NotNull Call<ApiResponse<T>> call, @NotNull Throwable t) {
-            onError.accept(t);
+        public void onFailure(@NotNull Call<ApiResponse<T>> call, @NotNull Throwable cause) {
+            onError.accept(mapError(cause));
+        }
+
+        private Throwable mapError(Throwable cause) {
+           if (cause instanceof IOException) {
+               return new NoInternetException();
+           } else {
+               return cause;
+           }
         }
 
     }

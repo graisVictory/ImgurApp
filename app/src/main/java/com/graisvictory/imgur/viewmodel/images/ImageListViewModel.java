@@ -2,21 +2,22 @@ package com.graisvictory.imgur.viewmodel.images;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.graisvictory.imgur.data.repository.PostsRepository;
 import com.graisvictory.imgur.domain.post.ImgurPost;
 import com.graisvictory.imgur.domain.post.PostImage;
-import com.graisvictory.imgur.viewmodel.DataState;
+import com.graisvictory.imgur.viewmodel.common.BaseViewModel;
+import com.graisvictory.imgur.viewmodel.common.DataState;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class ImageListViewModel extends ViewModel {
+public class ImageListViewModel extends BaseViewModel {
 
     private static final String IMAGE_PREFIX = "image/";
+    private static final int INITIAL_PAGE = -1;
 
     private PostsRepository postsRepository;
     private MutableLiveData<DataState<List<Image>>> pageLiveData = new MutableLiveData<>();
@@ -25,7 +26,7 @@ public class ImageListViewModel extends ViewModel {
     private boolean loadingEnded;
 
     @Inject
-    public ImageListViewModel(PostsRepository postsRepository) {
+    ImageListViewModel(PostsRepository postsRepository) {
         this.postsRepository = postsRepository;
         requestNextItems();
     }
@@ -38,6 +39,13 @@ public class ImageListViewModel extends ViewModel {
         return loadedItems;
     }
 
+    public void refresh() {
+        postsRepository.cancelPendingRequests();
+        page = INITIAL_PAGE;
+        loadedItems.clear();
+        requestNextItems();
+    }
+
     public void requestNextItems() {
         if (canLoadPosts()) {
             ++page;
@@ -48,7 +56,7 @@ public class ImageListViewModel extends ViewModel {
 
     private boolean canLoadPosts() {
         DataState<List<Image>> currentState = pageLiveData.getValue();
-        boolean isLoadingOrLoaded = (currentState != null && !currentState.isLoading())
+        boolean isLoadingOrLoaded = (currentState != null && currentState.isLoading())
                 || loadingEnded;
         return !isLoadingOrLoaded;
     }
@@ -77,8 +85,8 @@ public class ImageListViewModel extends ViewModel {
                                     List<PostImage> postImages) {
         for (PostImage image : postImages) {
             if (image.getType().contains(IMAGE_PREFIX)) {
-                Image mappedImage = new Image(image.getId(), image.getLink(), image.getDatetime(),
-                        post.getAuthor(), post.getTitle());
+                Image mappedImage = new Image(image.getId(), image.getLink(), post.getAuthor(),
+                        post.getTitle());
                 reducer.add(mappedImage);
             }
         }
@@ -87,6 +95,7 @@ public class ImageListViewModel extends ViewModel {
     private void onLoadError(Throwable error) {
         --page;
         pageLiveData.postValue(DataState.createErrorState(error));
+        postProperError(error);
     }
 
     @Override
@@ -94,6 +103,5 @@ public class ImageListViewModel extends ViewModel {
         super.onCleared();
         postsRepository.cancelPendingRequests();
     }
-
 
 }

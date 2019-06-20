@@ -1,4 +1,4 @@
-package com.graisvictory.imgur.viewmodel;
+package com.graisvictory.imgur.viewmodel.common;
 
 public final class DataState<T> {
 
